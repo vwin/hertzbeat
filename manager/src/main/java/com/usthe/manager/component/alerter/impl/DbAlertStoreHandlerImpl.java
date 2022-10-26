@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.manager.component.alerter.impl;
 
 import com.usthe.alert.service.AlertService;
@@ -14,7 +31,7 @@ import java.util.Map;
 
 /**
  * 报警持久化 - 落地到数据库
- *
+ * Alarm data persistence - landing in the database
  * @author <a href="mailto:Musk.Chen@fanruan.com">Musk.Chen</a>
  * @since 2022/4/24
  */
@@ -27,7 +44,7 @@ final class DbAlertStoreHandlerImpl implements AlertStoreHandler {
 
     @Override
     public void store(Alert alert) {
-        // todo Using the cache does not directly manipulate the library    使用缓存不直接操作库
+        // todo Using the cache does not directly manipulate the library
         Map<String, String> tags = alert.getTags();
         String monitorIdStr = tags.get(CommonConstants.TAG_MONITOR_ID);
         if (monitorIdStr == null) {

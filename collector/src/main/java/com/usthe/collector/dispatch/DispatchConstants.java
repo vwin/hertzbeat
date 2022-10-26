@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.collector.dispatch;
 
 /**
@@ -34,9 +51,17 @@ public interface DispatchConstants {
      */
     String PROTOCOL_REDIS = "redis";
     /**
+     * protocol jmx
+     */
+    String PROTOCOL_JMX = "jmx";
+    /**
      * protocol snmp
      */
     String PROTOCOL_SNMP = "snmp";
+    /**
+     * protocol ssl Certificate - custom
+     */
+    String PROTOCOL_SSL_CERT = "ssl_cert";
     // Protocol type related - end
     // 协议类型相关 - end //
 
@@ -51,6 +76,10 @@ public interface DispatchConstants {
      * Bearer Token 的认证参数字符
      */
     String BEARER = "Bearer";
+    /**
+     * Basic auth parameter
+     */
+    String BASIC = "Basic";
     /**
      * verification method  认证方式 Basic Auth
      */
@@ -87,5 +116,8 @@ public interface DispatchConstants {
      */
     String PARSE_PROMETHEUS = "prometheus";
     String PARSE_PROMETHEUS_ACCEPT = "application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1";
+    String PARSE_PROMETHEUS_VECTOR = "vector";
+    String PARSE_PROMETHEUS_MATRIX = "matrix";
+
     // http协议相关 - end //
 }

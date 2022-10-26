@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.alert.service;
 
 import com.usthe.alert.dto.AlertSummary;
@@ -47,6 +64,12 @@ public interface AlertService {
     void deleteAlerts(HashSet<Long> ids);
 
     /**
+     * Clear all alerts
+     * 清空所有告警记录
+     */
+    void clearAlerts();
+
+    /**
      * Update the alarm status according to the alarm ID-status value
      * 根据告警ID-状态值 更新告警状态
      *
@@ -63,8 +86,8 @@ public interface AlertService {
     AlertSummary getAlertsSummary();
 
     /**
-     * 第三方 上报告警信息
-     * @param alertReport 告警信息
+     * A third party reports an alarm  第三方 上报告警信息
+     * @param alertReport The alarm information 告警信息
      */
     void addNewAlertReport(AlertReport alertReport);
 

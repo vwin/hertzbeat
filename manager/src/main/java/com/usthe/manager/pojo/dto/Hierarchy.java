@@ -1,14 +1,30 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.manager.pojo.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_WRITE;
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_WRITE;
 
 /**
  * Hierarchical structure
@@ -22,35 +38,36 @@ import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_WRITE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Schema(description = "Monitor Hierarchy | 监控类型指标组指标信息层级关系")
 public class Hierarchy {
 
     /**
      * Category value
      */
-    @ApiModelProperty(value = "类别值", example = "os", accessMode = READ_WRITE, position = 0)
+    @Schema(description = "类别值", example = "os", accessMode = READ_WRITE)
     String category;
 
     /**
      * Attribute value
      */
-    @ApiModelProperty(value = "属性值", example = "linux", accessMode = READ_WRITE, position = 1)
+    @Schema(description = "属性值", example = "linux", accessMode = READ_WRITE)
     String value;
 
     /**
      * Attribute internationalization tag
      */
-    @ApiModelProperty(value = "属性国际化标签", example = "Linux系统", accessMode = READ_WRITE, position = 2)
+    @Schema(description = "属性国际化标签", example = "Linux系统", accessMode = READ_WRITE)
     String label;
 
     /**
      * Is it a leaf node
      */
-    @ApiModelProperty(value = "是否是叶子节点", example = "true", accessMode = READ_WRITE, position = 3)
+    @Schema(description = "是否是叶子节点", example = "true", accessMode = READ_WRITE)
     Boolean isLeaf = false;
 
     /**
      * Next level of association
      */
-    @ApiModelProperty(value = "下一关联层级", accessMode = READ_WRITE, position = 4)
+    @Schema(description = "下一关联层级", accessMode = READ_WRITE)
     private List<Hierarchy> children;
 }

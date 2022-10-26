@@ -1,23 +1,40 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.manager.support;
 
 import com.usthe.common.entity.dto.Message;
 import com.usthe.manager.support.exception.AlertNoticeException;
 import com.usthe.manager.support.exception.MonitorDatabaseException;
 import com.usthe.manager.support.exception.MonitorDetectException;
+import com.usthe.manager.support.exception.MonitorMetricsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.lang.reflect.Field;
+import java.util.Objects;
 
 import static com.usthe.common.util.CommonConstants.*;
 
@@ -31,19 +48,6 @@ import static com.usthe.common.util.CommonConstants.*;
 public class GlobalExceptionHandler {
 
     private static final String CONNECT_STR = "||";
-
-    private static Field detailMessage;
-
-    private static Field fieldErrorField;
-
-    static {
-        try {
-            detailMessage = Throwable.class.getDeclaredField("detailMessage");
-            detailMessage.setAccessible(true);
-            fieldErrorField = FieldError.class.getDeclaredField("field");
-            fieldErrorField.setAccessible(true);
-        } catch (Exception e) {}
-    }
 
     /**
      * 处理探测失败
@@ -97,7 +101,11 @@ public class GlobalExceptionHandler {
     @ResponseBody
     ResponseEntity<Message<Void>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         try {
-            Message<Void> message = Message.<Void>builder().msg((String) detailMessage.get(exception)).code(PARAM_INVALID_CODE).build();
+            String msg = exception.getCause().getMessage();
+            if (msg == null) {
+                msg = exception.getMessage();
+            }
+            Message<Void> message = Message.<Void>builder().msg(msg).code(PARAM_INVALID_CODE).build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         } catch (Exception e) {
             Message<Void> message = Message.<Void>builder().msg(exception.getMessage()).code(PARAM_INVALID_CODE).build();
@@ -120,7 +128,7 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception = (MethodArgumentNotValidException)e;
             exception.getBindingResult().getAllErrors().forEach(error -> {
                 try {
-                    String field = (String) fieldErrorField.get(error);
+                    String field = Objects.requireNonNull(error.getCodes())[0];
                     errorMessage.append(field).append(":").append(error.getDefaultMessage()).append(CONNECT_STR);
                 } catch (Exception e1) {
                     errorMessage.append(error.getDefaultMessage()).append(CONNECT_STR);
@@ -193,5 +201,18 @@ public class GlobalExceptionHandler {
         Message<Void> message = Message.<Void>builder().msg(errorMessage).code(MONITOR_CONFLICT_CODE).build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
+
+    /**
+     * 处理监控指标传参异常
+     * @param exception 指标参数异常
+     * @return
+     */
+    @ExceptionHandler(MonitorMetricsException.class)
+    @ResponseBody
+    ResponseEntity<Message<Void>> handleMonitorMetricsException(MonitorMetricsException exception) {
+        Message<Void> message = Message.<Void>builder().msg(exception.getMessage()).code(PARAM_INVALID_CODE).build();
+        return ResponseEntity.ok(message);
+    }
+
 
 }

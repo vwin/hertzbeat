@@ -1,12 +1,11 @@
-FROM openjdk:8-alpine3.9
+FROM openjdk:11.0.16-jre-slim-buster
 
-MAINTAINER tomsun28 "tomsun28@outlook.com"
+MAINTAINER tancloud "tomsun28@outlook.com"
 
-ADD hertzbeat-1.1.tar /opt/
-
-RUN apk add --no-cache tzdata
+ADD hertzbeat-1.2.0.tar /opt/
 
 ENV TZ=Asia/Shanghai
+#ENV LANG=zh_CN.UTF-8
 
 EXPOSE 1157
 

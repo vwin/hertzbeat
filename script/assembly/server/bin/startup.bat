@@ -1,3 +1,20 @@
+@rem
+@rem Licensed to the Apache Software Foundation (ASF) under one or more
+@rem contributor license agreements.  See the NOTICE file distributed with
+@rem this work for additional information regarding copyright ownership.
+@rem The ASF licenses this file to You under the Apache License, Version 2.0
+@rem (the "License"); you may not use this file except in compliance with
+@rem the License.  You may obtain a copy of the License at
+@rem
+@rem     http://www.apache.org/licenses/LICENSE-2.0
+@rem
+@rem Unless required by applicable law or agreed to in writing, software
+@rem distributed under the License is distributed on an "AS IS" BASIS,
+@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@rem See the License for the specific language governing permissions and
+@rem limitations under the License.
+@rem
+
 @title HertzBeat
 @echo off 
 setlocal enabledelayedexpansion
@@ -36,11 +53,11 @@ set JAVA_MEM_OPTS= -server -XX:SurvivorRatio=6 -XX:+UseParallelGC
 set LOGGING_CONFIG=-Dlogging.config=%CONF_DIR%\logback-spring.xml
 
 set CONFIG_FILES= -Dlogging.path=%LOGS_DIR% %LOGGING_CONFIG% -Dspring.config.location=%CONF_DIR%/
-echo Starting the %SERVER_NAME% ...
+echo Starting the HertzBeat %SERVER_NAME% ...
 
-start javaw %JAVA_OPTS% %JAVA_MEM_OPTS% %CONFIG_FILES% -jar %DEPLOY_DIR%\%JAR_NAME%
+start javaw %JAVA_OPTS% %JAVA_MEM_OPTS% %CONFIG_FILES% -jar %DEPLOY_DIR%\%JAR_NAME% >logs\startup.log 2>&1 &
 
-echo "Service starting OK!"
+echo "Service Start Success!"
 for /f "tokens=1-5" %%i in ('netstat -ano^|findstr ":%SERVER_PORT%"') do (
     echo Service PID: %%m , Port %SERVER_PORT%  
     goto q

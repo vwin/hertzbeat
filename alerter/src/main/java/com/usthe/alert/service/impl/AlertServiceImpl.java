@@ -1,6 +1,23 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.alert.service.impl;
 
-import com.usthe.alert.AlerterDataQueue;
+import com.usthe.common.queue.CommonDataQueue;
 import com.usthe.alert.dao.AlertDao;
 import com.usthe.alert.dto.AlertPriorityNum;
 import com.usthe.alert.dto.AlertSummary;
@@ -20,7 +37,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +57,7 @@ public class AlertServiceImpl implements AlertService {
     private AlertDao alertDao;
 
     @Autowired
-    private AlerterDataQueue alerterDataQueue;
+    private CommonDataQueue commonDataQueue;
 
     @Override
     public void addAlert(Alert alert) throws RuntimeException {
@@ -55,6 +72,11 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public void deleteAlerts(HashSet<Long> ids) {
         alertDao.deleteAlertsByIdIn(ids);
+    }
+
+    @Override
+    public void clearAlerts() {
+        alertDao.deleteAll();
     }
 
     @Override
@@ -107,13 +129,13 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public void addNewAlertReport(AlertReport alertReport) {
-        alerterDataQueue.addAlertData(buildAlertData(alertReport));
+        commonDataQueue.addAlertData(buildAlertData(alertReport));
     }
 
     /**
-     * 对外告警信息 转换为Alert
+     * The external alarm information is converted to Alert  对外告警信息 转换为Alert
      * @param alertReport 对外告警信息
-     * @return Alert实体
+     * @return Alert entity ｜ Alert实体
      */
     private Alert buildAlertData(AlertReport alertReport){
         Map<String, String> annotations = alertReport.getAnnotations();
@@ -134,8 +156,7 @@ public class AlertServiceImpl implements AlertService {
                 .tags(alertReport.getLabels())
                 .target(CommonConstants.AVAILABLE)
                 .times(3)
-                // todo 时区问题
-                .gmtCreate(LocalDateTime.ofInstant(Instant.ofEpochMilli(alertReport.getAlertTime()), ZoneOffset.of("+8")))
+                .gmtCreate(LocalDateTime.ofInstant(Instant.ofEpochMilli(alertReport.getAlertTime()), ZoneId.systemDefault()))
                 .build();
     }
 

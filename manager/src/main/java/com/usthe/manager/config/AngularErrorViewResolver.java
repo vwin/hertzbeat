@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.manager.config;
 
 import org.springframework.boot.autoconfigure.template.TemplateAvailabilityProvider;
@@ -14,7 +31,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -24,7 +40,6 @@ import java.util.Map;
 /**
  * Solve the front-end routing problem of angular static website resources with DefaultErrorViewResolver and route the 404 website request to the angular front-end
  * 同DefaultErrorViewResolver 解决angular静态网站资源前端路由问题 把404的网站请求给angular前端进行路由
- *
  * @author tom
  * @date 2021/12/24 21:07
  */
@@ -49,11 +64,11 @@ public class AngularErrorViewResolver implements ErrorViewResolver, Ordered {
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
-    public AngularErrorViewResolver(ApplicationContext applicationContext, WebProperties.Resources resources) {
+    public AngularErrorViewResolver(ApplicationContext applicationContext, WebProperties webProperties) {
         Assert.notNull(applicationContext, "ApplicationContext must not be null");
-        Assert.notNull(resources, "Resources must not be null");
+        Assert.notNull(webProperties.getResources(), "Resources must not be null");
         this.applicationContext = applicationContext;
-        this.resources = resources;
+        this.resources = webProperties.getResources();
         this.templateAvailabilityProviders = new TemplateAvailabilityProviders(applicationContext);
     }
 

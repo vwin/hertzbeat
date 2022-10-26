@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.usthe.common.util;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +43,7 @@ public class CommonUtil {
      * @param str string
      * @return double 数字
      */
-    public static Double parseDoubleStr(String str) {
+    public static Double parseStrDouble(String str) {
         if (str == null || "".equals(str)) {
             return null;
         }
@@ -54,8 +71,7 @@ public class CommonUtil {
                 str = str.substring(0, str.length() - unit.length());
             }
             BigDecimal bigDecimal = new BigDecimal(str);
-            double value = bigDecimal.setScale(4, RoundingMode.HALF_UP).doubleValue();
-            return String.valueOf(value);
+            return bigDecimal.setScale(4, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             return null;
@@ -86,21 +102,5 @@ public class CommonUtil {
         }
         Matcher m = PHONE_PATTERN.matcher(phoneNum);
         return m.find();
-    }
-
-    /**
-     * 告警级别文字转换
-     * @param priority 告警级别
-     * @return 告警级别文字
-     */
-    public static String transferAlertPriority(byte priority) {
-        String priorityMsg = "警告告警";
-        switch (priority) {
-            case 0: priorityMsg = "紧急告警"; break;
-            case 1: priorityMsg = "严重告警"; break;
-            case 2: priorityMsg = "警告告警"; break;
-            default: break;
-        }
-        return priorityMsg;
     }
 }
